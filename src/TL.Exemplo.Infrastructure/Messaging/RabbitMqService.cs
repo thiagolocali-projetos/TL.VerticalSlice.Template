@@ -29,7 +29,7 @@ public class RabbitMqService : IRabbitMqService, IDisposable
         _logger.LogInformation("🐰 RabbitMQ conectado");
     }
 
-    public async Task PublicarAsync<T>(string fila, T mensagem)
+    public async Task ProduzirAsync<T>(string fila, T mensagem)
     {
         await _channel.QueueDeclareAsync(fila, true, false, false, null);
         var json = JsonSerializer.Serialize(mensagem);

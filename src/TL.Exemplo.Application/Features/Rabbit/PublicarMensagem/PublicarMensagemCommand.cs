@@ -2,7 +2,7 @@ using MediatR;
 using TL.Exemplo.Application.Common.Models;
 using TL.Exemplo.Application.Contracts.Messaging;
 
-namespace TL.Exemplo.Application.Features.Mensageria.ConsumirMensagem;
+namespace TL.Exemplo.Application.Features.Rabbit.ConsumirMensagem;
 
 public record ConsumirMensagemCommand(string Fila) : IRequest<ApiResponse<object>>;
 

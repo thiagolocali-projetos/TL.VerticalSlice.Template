@@ -1,7 +1,7 @@
 namespace TL.Exemplo.Application.Contracts.Messaging;
 
-public interface IRabbitMqService
+public interface IKafkaService
 {
-    Task PublicarAsync<T>(string fila, T mensagem);
-    Task ConsumirAsync<T>(string fila, Func<T, Task> callback, CancellationToken cancellationToken);
+    Task ProduzirAsync<T>(string topico, string key, T mensagem, CancellationToken ct = default);
+    Task ConsumirAsync<T>(string topico, Func<T, Task> callback, CancellationToken ct = default);
 }

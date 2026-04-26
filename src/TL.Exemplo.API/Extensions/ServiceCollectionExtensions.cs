@@ -1,8 +1,12 @@
 using FluentValidation;
 using MediatR;
 using TL.Exemplo.Application.Common.Behaviors;
+using TL.Exemplo.Application.Contracts.Cache;
+using TL.Exemplo.Application.Contracts.Messaging;
 using TL.Exemplo.Application.Contracts.Repositories;
+using TL.Exemplo.Infrastructure.Cache;
 using TL.Exemplo.Infrastructure.Data;
+using TL.Exemplo.Infrastructure.Messaging;
 using TL.Exemplo.Infrastructure.Repositories;
 
 namespace TL.Exemplo.API.Extensions;
@@ -30,7 +34,17 @@ public static class ServiceCollectionExtensions
             ?? throw new InvalidOperationException("Connection string 'SqlServer' não encontrada.");
 
         services.AddSingleton<IDbConnectionFactory>(_ => new SqlServerConnectionFactory(connectionString));
+        services.AddSingleton<IRabbitMqService, RabbitMqService>();
+        services.AddSingleton<IKafkaService, KafkaService>();
         services.AddScoped<IProdutoRepository, ProdutoRepository>();
+
+        // Redis Cache
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = configuration.GetConnectionString("Redis") ?? "localhost:6379";
+            options.InstanceName = "TLExemplo_";
+        });
+        services.AddSingleton<ICacheService, RedisCacheService>();
 
         return services;
     }

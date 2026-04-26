@@ -1,33 +1,61 @@
+using Serilog;
 using TL.Exemplo.API.Extensions;
 using TL.Exemplo.API.Middleware;
 
-var builder = WebApplication.CreateBuilder(args);
+// ── Serilog: configuração DEVE vir antes de tudo ────────────────
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    //.Enrich.WithMachineName()
+    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.Seq("http://localhost:5341")
+    .CreateLogger();
 
-// ── Serviços ───────────────────────────────────────────────────────────────
-builder.Services.AddControllers();
-builder.Services.AddApplicationServices(builder.Configuration);
-builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddSwaggerServices();
-
-var app = builder.Build();
-
-// ── Pipeline ───────────────────────────────────────────────────────────────
-// Middleware global de tratamento de exceções (deve ser o primeiro)
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
+    Log.Information("🚀 Iniciando TL.Exemplo API...");
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    // Remove loggers padrão e usa Serilog
+    builder.Host.UseSerilog();
+
+    // ── Serviços ───────────────────────────────────────────────
+    builder.Services.AddControllers();
+    builder.Services.AddApplicationServices(builder.Configuration);
+    builder.Services.AddInfrastructureServices(builder.Configuration);
+    builder.Services.AddSwaggerServices();
+
+    var app = builder.Build();
+
+    // ── Pipeline ───────────────────────────────────────────────
+    app.UseSerilogRequestLogging(); // Log automático de cada request
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+    if (app.Environment.IsDevelopment())
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "TL.Exemplo API v1");
-        options.RoutePrefix = string.Empty; // Swagger na raiz: https://localhost:{porta}/
-        options.DocumentTitle = "TL.Exemplo - Vertical Slice API";
-    });
+        app.UseSwagger();
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "TL.Exemplo API v1");
+            options.RoutePrefix = string.Empty;
+            options.DocumentTitle = "TL.Exemplo - Vertical Slice API";
+        });
+    }
+
+    app.UseHttpsRedirection();
+    app.UseAuthorization();
+    app.MapControllers();
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "❌ API terminou inesperadamente");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

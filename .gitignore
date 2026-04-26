@@ -1,5 +1,101 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
+﻿# ============================================================
+# .gitignore para ASP.NET Core 8
+# ============================================================
 
-/.vs
+# ── Pastas e arquivos do .NET ───────────────────────────────
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# ── Pastas de build e publicação ────────────────────────────
+[Bb]uild/
+[Pp]ublish/
+out/
+output/
+
+# ── Visual Studio ───────────────────────────────────────────
+.vs/
+*.csproj.user
+*.dbmdl
+*.jfm
+_ReSharper*/
+[Tt]est[Rr]esult*/
+[Bb]uildLogs/
+
+# ── VS Code ─────────────────────────────────────────────────
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# ── Rider ───────────────────────────────────────────────────
+.idea/
+*.sln.iml
+
+# ── Segredos e configurações locais ─────────────────────────
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
+secrets.json
+*.secret
+*.pfx
+*.snk
+
+# ── Variáveis de ambiente ───────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Docker ──────────────────────────────────────────────────
+docker-compose.override.yml
+Dockerfile.override
+
+# ── Logs e cache ────────────────────────────────────────────
+*.log
+*.log.*
+logs/
+*.cache
+*.tmp
+*.swp
+
+# ── Arquivos do sistema ─────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ── Cobertura de testes ─────────────────────────────────────
+coverage/
+*.coverage
+*.coveragexml
+TestResults/
+
+# ── NuGet ───────────────────────────────────────────────────
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+.nuget/
+
+# ── Entity Framework ────────────────────────────────────────
+*.mdf
+*.ldf
+*.bak
+
+# ── Node (se usar front-end) ────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dist/
+
+# ── Outros ──────────────────────────────────────────────────
+*.orig
+*.bak
+*.old
+_UpgradeReport_Files/

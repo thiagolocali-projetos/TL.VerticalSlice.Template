@@ -1,3 +1,5 @@
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Serilog;
 using TL.Exemplo.API.Extensions;
 using TL.Exemplo.API.Middleware;
@@ -27,6 +29,11 @@ try
     builder.Services.AddApplicationServices(builder.Configuration);
     builder.Services.AddInfrastructureServices(builder.Configuration);
     builder.Services.AddSwaggerServices();
+    builder.Services.AddOpenTelemetry()
+    .ConfigureResource(r => r.AddService("TL.Exemplo.API"))
+    .WithTracing(t => t
+        .AddAspNetCoreInstrumentation()
+        .AddOtlpExporter(o => o.Endpoint = new Uri("http://localhost:4317")));
 
     var app = builder.Build();
 

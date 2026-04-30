@@ -1,0 +1,21 @@
+Changed database context to 'TLExemplo'.
+Inserindo dados de exemplo...
+
+(12 rows affected)
+Dados inseridos com sucesso! Total: 12 produtos
+Id          Nome                                                                                                                                                                                                     Preco                QuantidadeEstoque Ativo CriadoEm                              
+----------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -------------------- ----------------- ----- --------------------------------------
+          1 Notebook Dell XPS 13                                                                                                                                                                                                  4299.99                15     1            2026-04-30 17:27:50.0333333
+          2 Mouse Logitech MX Master 3                                                                                                                                                                                             329.99                45     1            2026-04-30 17:27:50.0333333
+          3 Teclado Mecanico Corsair K95 Platinum                                                                                                                                                                                  899.99                12     1            2026-04-30 17:27:50.0333333
+          4 Monitor LG UltraWide 34 polegadas                                                                                                                                                                                     1999.99                 8     1            2026-04-30 17:27:50.0333333
+          5 Webcam Logitech C920                                                                                                                                                                                                   249.99                32     1            2026-04-30 17:27:50.0333333
+          6 Headset SteelSeries Arctis 7                                                                                                                                                                                           649.99                20     1            2026-04-30 17:27:50.0333333
+          7 SSD NVMe Samsung 970 EVO Plus 1TB                                                                                                                                                                                      299.99                50     1            2026-04-30 17:27:50.0333333
+          8 Memoria RAM Corsair Vengeance RGB 32GB                                                                                                                                                                                 599.99                25     1            2026-04-30 17:27:50.0333333
+          9 Fonte Modular Corsair RM850x 850W                                                                                                                                                                                      499.99                18     1            2026-04-30 17:27:50.0333333
+         10 Case NZXT H510 Flow                                                                                                                                                                                                    329.99                22     1            2026-04-30 17:27:50.0333333
+         11 Monitor BenQ EW2480                                                                                                                                                                                                    399.99                30     1            2026-04-30 17:27:50.0333333
+         12 Mousepad SteelSeries QcK                                                                                                                                                                                                79.99                60     1            2026-04-30 17:27:50.0333333
+
+(12 rows affected)

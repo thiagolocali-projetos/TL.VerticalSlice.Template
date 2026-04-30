@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TL.Exemplo.Application.Common.Models;
 using TL.Exemplo.Application.Features.Produtos.Commands.CreateProduto;
@@ -6,6 +7,7 @@ using TL.Exemplo.Application.Features.Produtos.Commands.DeleteProduto;
 using TL.Exemplo.Application.Features.Produtos.Commands.UpdateProduto;
 using TL.Exemplo.Application.Features.Produtos.Queries.GetAllProdutos;
 using TL.Exemplo.Application.Features.Produtos.Queries.GetProdutoById;
+using TL.Exemplo.Application.Features.Produtos.Queries.GetProdutosPaged;
 
 namespace TL.Exemplo.API.Features.Produtos;
 
@@ -15,6 +17,7 @@ namespace TL.Exemplo.API.Features.Produtos;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
+[Authorize]
 public class ProdutosController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -23,7 +26,7 @@ public class ProdutosController : ControllerBase
         => _mediator = mediator;
 
     /// <summary>
-    /// Retorna todos os produtos cadastrados.
+    /// Retorna todos os produtos cadastrados (sem paginação).
     /// </summary>
     /// <param name="apenasAtivos">Filtrar apenas produtos ativos.</param>
     [HttpGet]
@@ -32,6 +35,23 @@ public class ProdutosController : ControllerBase
     {
         var result = await _mediator.Send(new GetAllProdutosQuery(apenasAtivos));
         return Ok(ApiResponse<IEnumerable<ProdutoDto>>.Ok(result));
+    }
+
+    /// <summary>
+    /// Retorna produtos com paginação.
+    /// </summary>
+    /// <param name="pageNumber">Número da página (padrão: 1).</param>
+    /// <param name="pageSize">Tamanho da página (padrão: 20, máximo: 100).</param>
+    /// <param name="apenasAtivos">Filtrar apenas produtos ativos.</param>
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(ApiResponse<PagedResult<ProdutoDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetPaged(
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 20,
+        [FromQuery] bool? apenasAtivos = null)
+    {
+        var result = await _mediator.Send(new GetProdutosPagedQuery(pageNumber, pageSize, apenasAtivos));
+        return Ok(ApiResponse<PagedResult<ProdutoDto>>.Ok(result));
     }
 
     /// <summary>

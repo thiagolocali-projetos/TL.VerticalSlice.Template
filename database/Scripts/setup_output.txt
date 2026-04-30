@@ -1,0 +1,3 @@
+Banco de dados TLExemplo já existe.
+Changed database context to 'TLExemplo'.
+Tabela Produtos já existe.

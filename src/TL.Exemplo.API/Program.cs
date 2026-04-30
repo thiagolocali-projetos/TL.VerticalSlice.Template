@@ -1,8 +1,17 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
+using System.Text;
 using TL.Exemplo.API.Extensions;
 using TL.Exemplo.API.Middleware;
+using TL.Exemplo.Application.Contracts.Authentication;
+using TL.Exemplo.Infrastructure.Authentication;
+using Hangfire;
+using Hangfire.Dashboard;
 
 // ── Serilog: configuração DEVE vir antes de tudo ────────────────
 Log.Logger = new LoggerConfiguration()
@@ -24,11 +33,44 @@ try
     // Remove loggers padrão e usa Serilog
     builder.Host.UseSerilog();
 
+    // ── JWT Configuration ──────────────────────────────────────────
+    var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+    var secretKey = jwtSettings["SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey não configurada");
+    var issuer = jwtSettings["Issuer"] ?? "TL.Exemplo.API";
+    var audience = jwtSettings["Audience"] ?? "TL.Exemplo.Users";
+
+    builder.Services.AddSingleton<ITokenService>(
+        new JwtTokenService(secretKey, issuer, audience, expirationMinutes: 60)
+    );
+    builder.Services.AddSingleton<IUserRepository, UserRepository>();
+
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+            ValidateIssuer = true,
+            ValidIssuer = issuer,
+            ValidateAudience = true,
+            ValidAudience = audience,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
     // ── Serviços ───────────────────────────────────────────────
     builder.Services.AddControllers();
     builder.Services.AddApplicationServices(builder.Configuration);
     builder.Services.AddInfrastructureServices(builder.Configuration);
+    builder.Services.AddHangfireServices(builder.Configuration);
     builder.Services.AddSwaggerServices();
+    builder.Services.AddApplicationHealthChecks(builder.Configuration);
     builder.Services.AddOpenTelemetry()
     .ConfigureResource(r => r.AddService("TL.Exemplo.API"))
     .WithTracing(t => t
@@ -39,7 +81,9 @@ try
 
     // ── Pipeline ───────────────────────────────────────────────
     app.UseSerilogRequestLogging(); // Log automático de cada request
+    app.UseRateLimiting(requestsPerMinute: 100); // Rate limiting: 100 requisições por minuto por IP
     app.UseMiddleware<ExceptionHandlingMiddleware>();
+    app.UseHangfireConfiguration(); // Hangfire Dashboard + Recurring Jobs
 
     if (app.Environment.IsDevelopment())
     {
@@ -53,8 +97,10 @@ try
     }
 
     app.UseHttpsRedirection();
+    app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
+    app.MapApplicationHealthChecks();
 
     app.Run();
 }
@@ -66,3 +112,8 @@ finally
 {
     Log.CloseAndFlush();
 }
+
+/// <summary>
+/// Classe Program explícita para tornar acessível aos testes de integração.
+/// </summary>
+public partial class Program { }

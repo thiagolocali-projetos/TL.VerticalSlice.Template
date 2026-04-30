@@ -1,5 +1,6 @@
 using FluentValidation;
 using MediatR;
+using Microsoft.OpenApi.Models;
 using TL.Exemplo.Application.Common.Behaviors;
 using TL.Exemplo.Application.Contracts.Cache;
 using TL.Exemplo.Application.Contracts.Messaging;
@@ -37,6 +38,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IRabbitMqService, RabbitMqService>();
         services.AddSingleton<IKafkaService, KafkaService>();
         services.AddScoped<IProdutoRepository, ProdutoRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
         // Redis Cache
         services.AddStackExchangeRedisCache(options =>
@@ -54,15 +56,41 @@ public static class ServiceCollectionExtensions
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            options.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "TL.Exemplo - Vertical Slice API",
                 Version = "v1",
                 Description = "API de exemplo com arquitetura Vertical Slice, MediatR, FluentValidation e Dapper.",
-                Contact = new Microsoft.OpenApi.Models.OpenApiContact
+                Contact = new OpenApiContact
                 {
                     Name = "TL.Exemplo",
                     Email = "contato@tlexemplo.com.br"
+                }
+            });
+
+            // JWT Security Definition
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Description = "JWT Authorization header using the Bearer scheme."
+            });
+
+            // JWT Security Requirement
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
                 }
             });
 

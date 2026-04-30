@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build *)",
+      "Bash(dotnet run *)",
+      "Bash(curl -s http://localhost:5001/)",
+      "Read(//d/Desenvolvimento/**)",
+      "Bash(docker-compose up *)",
+      "Bash(docker-compose ps *)",
+      "Bash(curl -s http://localhost:5001/health)",
+      "Bash(docker exec *)",
+      "Bash(curl -s http://localhost:5001)"
+    ]
+  }
+}

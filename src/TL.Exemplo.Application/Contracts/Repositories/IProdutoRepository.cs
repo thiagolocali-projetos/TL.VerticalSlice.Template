@@ -1,3 +1,4 @@
+using TL.Exemplo.Application.Common.Models;
 using TL.Exemplo.Domain.Entities;
 
 namespace TL.Exemplo.Application.Contracts.Repositories;
@@ -15,4 +16,8 @@ public interface IProdutoRepository
     Task<int> CreateAsync(Produto produto);
     Task UpdateAsync(Produto produto);
     Task DeleteAsync(int id);
+
+    // Métodos de paginação
+    Task<PagedResult<Produto>> GetPagedAsync(int pageNumber = 1, int pageSize = 20);
+    Task<PagedResult<Produto>> GetPagedAtivosAsync(int pageNumber = 1, int pageSize = 20);
 }

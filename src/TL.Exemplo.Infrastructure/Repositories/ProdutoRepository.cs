@@ -22,10 +22,7 @@ public class ProdutoRepository : IProdutoRepository
 
     public async Task<IEnumerable<Produto>> GetAllAsync()
     {
-        var teste = "TESTE NOVO!!!!";
-        var guid = "e0f9481b-d9db-4a18-b46a-6852dec460ba";
-        _logger.LogInformation(
-            $"Produto criado: Teste={teste}, guid={guid}");
+        _logger.LogInformation("Recuperando todos os produtos");
 
         const string sql = @"
             SELECT Id, Nome, Descricao, Preco, QuantidadeEstoque, Ativo, CriadoEm, AtualizadoEm
@@ -92,5 +89,64 @@ public class ProdutoRepository : IProdutoRepository
 
         using var connection = _connectionFactory.CreateConnection();
         await connection.ExecuteAsync(sql, new { Id = id });
+    }
+
+    public async Task<TL.Exemplo.Application.Common.Models.PagedResult<Produto>> GetPagedAsync(int pageNumber = 1, int pageSize = 20)
+    {
+        _logger.LogInformation("Recuperando produtos paginados: Page={PageNumber}, Size={PageSize}", pageNumber, pageSize);
+
+        // Validar parâmetros
+        pageNumber = pageNumber < 1 ? 1 : pageNumber;
+        pageSize = pageSize > 100 ? 100 : pageSize < 1 ? 1 : pageSize;
+
+        const string countSql = "SELECT COUNT(*) FROM Produtos";
+        const string dataSql = @"
+            SELECT Id, Nome, Descricao, Preco, QuantidadeEstoque, Ativo, CriadoEm, AtualizadoEm
+            FROM Produtos
+            ORDER BY Nome
+            OFFSET (@PageNumber - 1) * @PageSize ROWS
+            FETCH NEXT @PageSize ROWS ONLY";
+
+        using var connection = _connectionFactory.CreateConnection();
+
+        var totalCount = await connection.QueryFirstOrDefaultAsync<int>(countSql);
+        var produtos = await connection.QueryAsync<Produto>(dataSql, new { PageNumber = pageNumber, PageSize = pageSize });
+
+        return TL.Exemplo.Application.Common.Models.PagedResult<Produto>.Create(
+            produtos,
+            pageNumber,
+            pageSize,
+            totalCount
+        );
+    }
+
+    public async Task<TL.Exemplo.Application.Common.Models.PagedResult<Produto>> GetPagedAtivosAsync(int pageNumber = 1, int pageSize = 20)
+    {
+        _logger.LogInformation("Recuperando produtos ativos paginados: Page={PageNumber}, Size={PageSize}", pageNumber, pageSize);
+
+        // Validar parâmetros
+        pageNumber = pageNumber < 1 ? 1 : pageNumber;
+        pageSize = pageSize > 100 ? 100 : pageSize < 1 ? 1 : pageSize;
+
+        const string countSql = "SELECT COUNT(*) FROM Produtos WHERE Ativo = 1";
+        const string dataSql = @"
+            SELECT Id, Nome, Descricao, Preco, QuantidadeEstoque, Ativo, CriadoEm, AtualizadoEm
+            FROM Produtos
+            WHERE Ativo = 1
+            ORDER BY Nome
+            OFFSET (@PageNumber - 1) * @PageSize ROWS
+            FETCH NEXT @PageSize ROWS ONLY";
+
+        using var connection = _connectionFactory.CreateConnection();
+
+        var totalCount = await connection.QueryFirstOrDefaultAsync<int>(countSql);
+        var produtos = await connection.QueryAsync<Produto>(dataSql, new { PageNumber = pageNumber, PageSize = pageSize });
+
+        return TL.Exemplo.Application.Common.Models.PagedResult<Produto>.Create(
+            produtos,
+            pageNumber,
+            pageSize,
+            totalCount
+        );
     }
 }

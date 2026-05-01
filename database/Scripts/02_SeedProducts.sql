@@ -1,19 +1,19 @@
--- Script para popular dados iniciais de produtos
+﻿-- Script para popular dados iniciais de Samples
 -- Executar apos 01_CreateDatabase.sql
 
-USE TLExemplo;
+USE TLVerticalSliceTemplate;
 
 GO
 
 -- Limpar dados existentes (opcional - comentar se nao quiser)
--- DELETE FROM Produtos;
+-- DELETE FROM Samples;
 
 -- Verificar se ja existem dados
-IF (SELECT COUNT(*) FROM Produtos) = 0
+IF (SELECT COUNT(*) FROM Samples) = 0
 BEGIN
     PRINT 'Inserindo dados de exemplo...';
 
-    INSERT INTO Produtos (Nome, Descricao, Preco, QuantidadeEstoque, Ativo, CriadoEm)
+    INSERT INTO Samples (Nome, Descricao, Preco, QuantidadeEstoque, Ativo, CriadoEm)
     VALUES
     ('Notebook Dell XPS 13', 'Notebook ultraportatil com processador Intel i7, 16GB RAM, 512GB SSD.', 4299.99, 15, 1, GETUTCDATE()),
     ('Mouse Logitech MX Master 3', 'Mouse sem fio com rastreamento precisao 4K, 8 botoes personalizaveis.', 329.99, 45, 1, GETUTCDATE()),
@@ -28,12 +28,12 @@ BEGIN
     ('Monitor BenQ EW2480', 'Monitor IPS 24 polegadas, 1920x1080, sem flickering.', 399.99, 30, 1, GETUTCDATE()),
     ('Mousepad SteelSeries QcK', 'Mousepad de tecido 320x270mm, superficie otimizada para jogos.', 79.99, 60, 1, GETUTCDATE());
 
-    PRINT 'Dados inseridos com sucesso! Total: ' + CAST(@@ROWCOUNT AS NVARCHAR(10)) + ' produtos';
+    PRINT 'Dados inseridos com sucesso! Total: ' + CAST(@@ROWCOUNT AS NVARCHAR(10)) + ' Samples';
 END
 ELSE
 BEGIN
-    DECLARE @totalProdutos INT = (SELECT COUNT(*) FROM Produtos);
-    PRINT 'Tabela Produtos ja contem dados. Total: ' + CAST(@totalProdutos AS NVARCHAR(10)) + ' produtos';
+    DECLARE @totalSamples INT = (SELECT COUNT(*) FROM Samples);
+    PRINT 'Tabela Samples ja contem dados. Total: ' + CAST(@totalSamples AS NVARCHAR(10)) + ' Samples';
 END
 
 GO
@@ -46,5 +46,6 @@ SELECT
     QuantidadeEstoque,
     Ativo,
     CriadoEm
-FROM Produtos
+FROM Samples
 ORDER BY CriadoEm DESC;
+

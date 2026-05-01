@@ -1,7 +1,7 @@
--- Script para criar tabela RefreshTokens
+﻿-- Script para criar tabela RefreshTokens
 -- Executar apos 01_CreateDatabase.sql
 
-USE TLExemplo;
+USE TLVerticalSliceTemplate;
 
 GO
 
@@ -32,3 +32,4 @@ BEGIN
 END
 
 GO
+

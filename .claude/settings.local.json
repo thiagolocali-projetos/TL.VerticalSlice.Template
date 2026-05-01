@@ -9,7 +9,31 @@
       "Bash(docker-compose ps *)",
       "Bash(curl -s http://localhost:5001/health)",
       "Bash(docker exec *)",
-      "Bash(curl -s http://localhost:5001)"
+      "Bash(curl -s http://localhost:5001)",
+      "Bash(pkill -f \"dotnet run\")",
+      "Bash(dotnet clean *)",
+      "Bash(sqlcmd -S localhost,1433 -U sa -P \"Estudos@2026\" -d TLExemplo -i create-refresh-tokens-table.sql)",
+      "Bash(sqlcmd *)",
+      "Bash(curl -X POST https://localhost:44395/api/v1/auth/login -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(curl *)",
+      "Bash(xargs grep *)",
+      "Bash(pkill -f \"dotnet.*TL.Exemplo\")",
+      "PowerShell(Get-Process *)",
+      "Bash(netstat -tuln)",
+      "PowerShell(D:\\\\Desenvolvimento\\\\transform-to-template.ps1)",
+      "PowerShell(Head *)",
+      "Bash(git restore *)",
+      "Bash(cp -r \"TL.Exemplo.API\" \".TL.Exemplo.API.tmp\")",
+      "Bash(mv \".TL.Exemplo.API.tmp\" \"TL.VerticalSlice.Template.API.new\")",
+      "Bash(rm -rf \"TL.VerticalSlice.Template.API\")",
+      "Bash(mv \"TL.VerticalSlice.Template.API.new\" \"TL.VerticalSlice.Template.API\")",
+      "Bash(rm -rf \"TL.Exemplo.API\")",
+      "Bash(find TL.VerticalSlice.Template.* -maxdepth 1 -name \"*.csproj\")",
+      "Bash(mkdir -p \"TL.VerticalSlice.Template.API\")",
+      "Bash(cp -r \"TL.Exemplo.API\"/* \"TL.VerticalSlice.Template.API/\")",
+      "Bash(mv \"TL.VerticalSlice.Template.API/TL.Exemplo.API.csproj\" \"TL.VerticalSlice.Template.API/TL.VerticalSlice.Template.API.csproj\")",
+      "Bash(ls -d src/TL.Exemplo.*)",
+      "Bash(rm -rf \"src/TL.Exemplo.API.old\")"
     ]
   }
 }

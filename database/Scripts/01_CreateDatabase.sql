@@ -1,28 +1,28 @@
--- Script para criar o banco de dados TLExemplo
+﻿-- Script para criar o banco de dados TLVerticalSliceTemplate
 -- Executar com credenciais SA do SQL Server
 
--- Criar banco se não existir
-IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'TLExemplo')
+-- Criar banco se nÃ£o existir
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'TLVerticalSliceTemplate')
 BEGIN
-    CREATE DATABASE TLExemplo;
-    PRINT 'Banco de dados TLExemplo criado com sucesso!';
+    CREATE DATABASE TLVerticalSliceTemplate;
+    PRINT 'Banco de dados TLVerticalSliceTemplate criado com sucesso!';
 END
 ELSE
 BEGIN
-    PRINT 'Banco de dados TLExemplo já existe.';
+    PRINT 'Banco de dados TLVerticalSliceTemplate jÃ¡ existe.';
 END
 
 GO
 
 -- Usar o banco criado
-USE TLExemplo;
+USE TLVerticalSliceTemplate;
 
 GO
 
--- Criar tabela Produtos
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Produtos')
+-- Criar tabela Samples
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Samples')
 BEGIN
-    CREATE TABLE Produtos (
+    CREATE TABLE Samples (
         Id INT IDENTITY(1,1) PRIMARY KEY,
         Nome NVARCHAR(200) NOT NULL,
         Descricao NVARCHAR(MAX) NOT NULL,
@@ -32,19 +32,20 @@ BEGIN
         CriadoEm DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
         AtualizadoEm DATETIME2 NULL,
 
-        -- Índices para melhor performance
+        -- Ãndices para melhor performance
         CONSTRAINT CK_Preco CHECK (Preco >= 0),
         CONSTRAINT CK_QuantidadeEstoque CHECK (QuantidadeEstoque >= 0)
     );
 
-    CREATE INDEX IDX_Produtos_Ativo ON Produtos(Ativo);
-    CREATE INDEX IDX_Produtos_Nome ON Produtos(Nome);
+    CREATE INDEX IDX_Samples_Ativo ON Samples(Ativo);
+    CREATE INDEX IDX_Samples_Nome ON Samples(Nome);
 
-    PRINT 'Tabela Produtos criada com sucesso!';
+    PRINT 'Tabela Samples criada com sucesso!';
 END
 ELSE
 BEGIN
-    PRINT 'Tabela Produtos já existe.';
+    PRINT 'Tabela Samples jÃ¡ existe.';
 END
 
 GO
+

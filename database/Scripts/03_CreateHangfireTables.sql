@@ -1,13 +1,13 @@
--- Script para criar tabelas do Hangfire
--- O Hangfire criará automaticamente na primeira execução
--- Este script é fornecido como backup para restauração manual
+﻿-- Script para criar tabelas do Hangfire
+-- O Hangfire criarÃ¡ automaticamente na primeira execuÃ§Ã£o
+-- Este script Ã© fornecido como backup para restauraÃ§Ã£o manual
 
-USE TLExemplo;
+USE TLVerticalSliceTemplate;
 
 GO
 
--- As tabelas do Hangfire serão criadas automaticamente pelo Hangfire.SqlServer
--- quando você chamar app.UseHangfireConfiguration() na primeira vez.
+-- As tabelas do Hangfire serÃ£o criadas automaticamente pelo Hangfire.SqlServer
+-- quando vocÃª chamar app.UseHangfireConfiguration() na primeira vez.
 --
 -- Se precisar recriar as tabelas manualmente, descomente e execute:
 /*
@@ -25,7 +25,8 @@ DROP TABLE IF EXISTS [HangFire.Set];
 DROP TABLE IF EXISTS [HangFire.Server];
 DROP TABLE IF EXISTS [HangFire.Schedule];
 
-PRINT 'Tabelas do Hangfire removidas. Execute a aplicação para recriá-las automaticamente.';
+PRINT 'Tabelas do Hangfire removidas. Execute a aplicaÃ§Ã£o para recriÃ¡-las automaticamente.';
 */
 
-PRINT 'As tabelas do Hangfire serão criadas automaticamente na primeira execução da aplicação.';
+PRINT 'As tabelas do Hangfire serÃ£o criadas automaticamente na primeira execuÃ§Ã£o da aplicaÃ§Ã£o.';
+

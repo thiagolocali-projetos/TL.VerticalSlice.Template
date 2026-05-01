@@ -35,18 +35,23 @@ public static class ServiceCollectionExtensions
             ?? throw new InvalidOperationException("Connection string 'SqlServer' nÃ£o encontrada.");
 
         services.AddSingleton<IDbConnectionFactory>(_ => new SqlServerConnectionFactory(connectionString));
-        services.AddSingleton<IRabbitMqService, RabbitMqService>();
-        services.AddSingleton<IKafkaService, KafkaService>();
+
+        // OPTIONAL: Uncomment to enable RabbitMQ messaging
+        // services.AddSingleton<IRabbitMqService, RabbitMqService>();
+
+        // OPTIONAL: Uncomment to enable Kafka streaming
+        // services.AddSingleton<IKafkaService, KafkaService>();
+
         services.AddScoped<ISampleRepository, SampleRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
-        // Redis Cache
-        services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = configuration.GetConnectionString("Redis") ?? "localhost:6379";
-            options.InstanceName = "TLVerticalSliceTemplate_";
-        });
-        services.AddSingleton<ICacheService, RedisCacheService>();
+        // OPTIONAL: Uncomment to enable Redis caching
+        // services.AddStackExchangeRedisCache(options =>
+        // {
+        //     options.Configuration = configuration.GetConnectionString("Redis") ?? "localhost:6379";
+        //     options.InstanceName = "TLVerticalSliceTemplate_";
+        // });
+        // services.AddSingleton<ICacheService, RedisCacheService>();
 
         return services;
     }

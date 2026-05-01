@@ -1,0 +1,144 @@
+version: '3.8'
+
+services:
+  # ESSENTIAL: SQL Server Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: tl-verticalslice-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Password@2024"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    networks:
+      - tl-network
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Password@2024 -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # OPTIONAL: Redis Cache
+  # Uncomment the section below to enable Redis caching
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: tl-verticalslice-redis
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - tl-network
+  #   volumes:
+  #     - redis_data:/data
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # OPTIONAL: RabbitMQ Message Broker
+  # Uncomment the section below to enable RabbitMQ
+  # rabbitmq:
+  #   image: rabbitmq:3-management-alpine
+  #   container_name: tl-verticalslice-rabbitmq
+  #   environment:
+  #     RABBITMQ_DEFAULT_USER: guest
+  #     RABBITMQ_DEFAULT_PASS: guest
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   networks:
+  #     - tl-network
+  #   volumes:
+  #     - rabbitmq_data:/var/lib/rabbitmq
+  #   healthcheck:
+  #     test: ["CMD", "rabbitmq-diagnostics", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # OPTIONAL: Kafka + Zookeeper Event Streaming
+  # Uncomment the sections below to enable Kafka
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper:7.5.0
+  #   container_name: tl-verticalslice-zookeeper
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #     ZOOKEEPER_TICK_TIME: 2000
+  #   ports:
+  #     - "2181:2181"
+  #   networks:
+  #     - tl-network
+  #   volumes:
+  #     - zookeeper_data:/var/lib/zookeeper/data
+
+  # kafka:
+  #   image: confluentinc/cp-kafka:7.5.0
+  #   container_name: tl-verticalslice-kafka
+  #   depends_on:
+  #     - zookeeper
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+  #     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #   ports:
+  #     - "9092:9092"
+  #   networks:
+  #     - tl-network
+  #   volumes:
+  #     - kafka_data:/var/lib/kafka/data
+  #   healthcheck:
+  #     test: ["CMD", "kafka-broker-api-versions.sh", "--bootstrap-server", "localhost:9092"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # OPTIONAL: Seq Structured Logging
+  # Uncomment the section below to enable Seq log aggregation
+  # seq:
+  #   image: datalust/seq:latest
+  #   container_name: tl-verticalslice-seq
+  #   environment:
+  #     ACCEPT_EULA: "Y"
+  #   ports:
+  #     - "5341:80"
+  #   networks:
+  #     - tl-network
+  #   volumes:
+  #     - seq_data:/data
+
+  # OPTIONAL: Jaeger Distributed Tracing
+  # Uncomment the section below to enable Jaeger tracing
+  # jaeger:
+  #   image: jaegertracing/all-in-one:latest
+  #   container_name: tl-verticalslice-jaeger
+  #   ports:
+  #     - "5775:5775/udp"
+  #     - "6831:6831/udp"
+  #     - "6832:6832/udp"
+  #     - "5778:5778"
+  #     - "16686:16686"
+  #     - "4317:4317"
+  #     - "4318:4318"
+  #   networks:
+  #     - tl-network
+  #   volumes:
+  #     - jaeger_data:/badger/data
+
+networks:
+  tl-network:
+    driver: bridge
+
+volumes:
+  sqlserver_data:
+  redis_data:
+  rabbitmq_data:
+  zookeeper_data:
+  kafka_data:
+  seq_data:
+  jaeger_data:

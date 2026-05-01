@@ -42,7 +42,12 @@
       "Bash(grep -v \"^database$\")",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(grep -v \"^src$\\\\|^database$\\\\|^\\\\.$\\\\|^\\\\.\\\\.\\\\|^\\\\.\\\\|^README\")"
+      "Bash(grep -v \"^src$\\\\|^database$\\\\|^\\\\.$\\\\|^\\\\.\\\\.\\\\|^\\\\.\\\\|^README\")",
+      "Bash(find src/TL.VerticalSlice.Template.* -maxdepth 1 -name '*.csproj')",
+      "Bash(netstat -ano)",
+      "Bash(taskkill /PID 30992 /F)",
+      "Bash(kill -9 30992)",
+      "Bash(pkill -9 dotnet)"
     ]
   }
 }

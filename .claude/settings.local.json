@@ -33,7 +33,15 @@
       "Bash(cp -r \"TL.Exemplo.API\"/* \"TL.VerticalSlice.Template.API/\")",
       "Bash(mv \"TL.VerticalSlice.Template.API/TL.Exemplo.API.csproj\" \"TL.VerticalSlice.Template.API/TL.VerticalSlice.Template.API.csproj\")",
       "Bash(ls -d src/TL.Exemplo.*)",
-      "Bash(rm -rf \"src/TL.Exemplo.API.old\")"
+      "Bash(rm -rf \"src/TL.Exemplo.API.old\")",
+      "Bash(find src/TL.VerticalSlice.Template.* -maxdepth 1 -type f -name \"*.csproj\")",
+      "Bash(awk '{print $NF}')",
+      "Bash(find src/TL.VerticalSlice.Template.* -maxdepth 1 -type d)",
+      "Bash(find src/TL.VerticalSlice.Template.* -maxdepth 1 -name \"*.csproj\")",
+      "Bash(grep -v \"^src$\")",
+      "Bash(grep -v \"^database$\")",
+      "Bash(git add *)",
+      "Bash(git commit *)"
     ]
   }
 }

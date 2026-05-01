@@ -41,7 +41,8 @@
       "Bash(grep -v \"^src$\")",
       "Bash(grep -v \"^database$\")",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(grep -v \"^src$\\\\|^database$\\\\|^\\\\.$\\\\|^\\\\.\\\\.\\\\|^\\\\.\\\\|^README\")"
     ]
   }
 }

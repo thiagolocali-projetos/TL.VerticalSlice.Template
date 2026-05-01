@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TL.VerticalSlice.Template.Application.Common.Models;
@@ -12,7 +12,7 @@ using TL.VerticalSlice.Template.Application.Features.Samples.Queries.GetSamplesP
 namespace TL.VerticalSlice.Template.API.Features.Samples;
 
 /// <summary>
-/// Controller responsÃ¡vel pelo gerenciamento de Samples.
+/// Controller responsável pelo gerenciamento de Samples.
 /// </summary>
 [ApiController]
 [Route("api/v1/[controller]")]
@@ -26,7 +26,7 @@ public class SamplesController : ControllerBase
         => _mediator = mediator;
 
     /// <summary>
-    /// Retorna todos os Samples cadastrados (sem paginaÃ§Ã£o).
+    /// Retorna todos os Samples cadastrados (sem paginação).
     /// </summary>
     /// <param name="apenasAtivos">Filtrar apenas Samples ativos.</param>
     [HttpGet]
@@ -38,10 +38,10 @@ public class SamplesController : ControllerBase
     }
 
     /// <summary>
-    /// Retorna Samples com paginaÃ§Ã£o.
+    /// Retorna Samples com paginação.
     /// </summary>
-    /// <param name="pageNumber">NÃºmero da pÃ¡gina (padrÃ£o: 1).</param>
-    /// <param name="pageSize">Tamanho da pÃ¡gina (padrÃ£o: 20, mÃ¡ximo: 100).</param>
+    /// <param name="pageNumber">Número da página (padrão: 1).</param>
+    /// <param name="pageSize">Tamanho da página (padrão: 20, máximo: 100).</param>
     /// <param name="apenasAtivos">Filtrar apenas Samples ativos.</param>
     [HttpGet("paged")]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<SampleDto>>), StatusCodes.Status200OK)]
@@ -96,7 +96,7 @@ public class SamplesController : ControllerBase
     public async Task<IActionResult> Update(int id, [FromBody] UpdateSampleCommand command)
     {
         if (id != command.Id)
-            return BadRequest(ApiResponse<object>.Falha("O Id da rota nÃ£o corresponde ao Id do corpo da requisiÃ§Ã£o."));
+            return BadRequest(ApiResponse<object>.Falha("O Id da rota não corresponde ao Id do corpo da requisição."));
 
         await _mediator.Send(command);
         return Ok(ApiResponse.Ok("Sample atualizado com sucesso."));
@@ -116,4 +116,3 @@ public class SamplesController : ControllerBase
         return Ok(ApiResponse.Ok("Sample removido com sucesso."));
     }
 }
-

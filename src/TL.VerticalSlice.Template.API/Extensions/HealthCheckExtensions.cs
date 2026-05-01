@@ -1,11 +1,11 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using StackExchange.Redis;
 
 namespace TL.VerticalSlice.Template.API.Extensions;
 
 /// <summary>
-/// ExtensÃµes para configurar health checks da aplicaÃ§Ã£o.
+/// Extensões para configurar health checks da aplicação.
 /// </summary>
 public static class HealthCheckExtensions
 {
@@ -37,7 +37,7 @@ public static class HealthCheckExtensions
             );
         }
 
-        // Liveness probe (aplicaÃ§Ã£o estÃ¡ rodando)
+        // Liveness probe (aplicação está rodando)
         healthChecksBuilder.AddCheck(
             "Liveness",
             () => HealthCheckResult.Healthy("Application is alive"),
@@ -49,20 +49,20 @@ public static class HealthCheckExtensions
 
     public static WebApplication MapApplicationHealthChecks(this WebApplication app)
     {
-        // Endpoint padrÃ£o de health check
+        // Endpoint padrão de health check
         app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
         {
             ResponseWriter = WriteJsonResponse
         });
 
-        // Endpoint de readiness (ready para receber requisiÃ§Ãµes)
+        // Endpoint de readiness (ready para receber requisições)
         app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
         {
             Predicate = check => !check.Tags.Contains("live"),
             ResponseWriter = WriteJsonResponse
         });
 
-        // Endpoint de liveness (apenas verificar se estÃ¡ vivo)
+        // Endpoint de liveness (apenas verificar se está vivo)
         app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
         {
             Predicate = check => check.Tags.Contains("live"),
@@ -137,4 +137,3 @@ public static class HealthCheckExtensions
         await context.Response.WriteAsJsonAsync(response);
     }
 }
-

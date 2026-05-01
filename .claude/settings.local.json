@@ -47,7 +47,11 @@
       "Bash(netstat -ano)",
       "Bash(taskkill /PID 30992 /F)",
       "Bash(kill -9 30992)",
-      "Bash(pkill -9 dotnet)"
+      "Bash(pkill -9 dotnet)",
+      "PowerShell(Stop-Process *)",
+      "Bash(tee /tmp/api.log)",
+      "PowerShell(sqlcmd *)",
+      "PowerShell(sqlcmd -S localhost -U sa -P \"Estudos@2026\" -Q $sql)"
     ]
   }
 }

@@ -4,7 +4,7 @@ services:
     build: .
     container_name: TL.VerticalSlice.Template-prod
     ports:
-      - "5014:80"
+      - "5016:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - NODE_ENV=production

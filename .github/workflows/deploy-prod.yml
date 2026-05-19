@@ -1,15 +1,12 @@
 ﻿name: Deploy PROD
-
 on:
   push:
     branches: [main]
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Deploy to PROD
         uses: appleboy/ssh-action@master
         with:
@@ -19,6 +16,5 @@ jobs:
           script: |
             cd ~/docker/projetos/TL.VerticalSlice.Template
             git pull origin main
-            cd ~/docker
-            docker compose -f docker-compose.prod.yml build --no-cache TL.VerticalSlice.Template-prod
-            docker compose -f docker-compose.prod.yml up -d TL.VerticalSlice.Template-prod
+            docker compose -p tl.verticalslice.template-prod -f docker-compose.prod.yml build --no-cache
+            docker compose -p tl.verticalslice.template-prod -f docker-compose.prod.yml up -d

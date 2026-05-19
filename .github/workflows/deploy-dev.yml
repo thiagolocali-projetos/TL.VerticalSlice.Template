@@ -1,15 +1,12 @@
 ﻿name: Deploy DEV
-
 on:
   push:
     branches: [develop]
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Deploy to DEV
         uses: appleboy/ssh-action@master
         with:
@@ -19,6 +16,5 @@ jobs:
           script: |
             cd ~/docker/projetos/TL.VerticalSlice.Template
             git pull origin develop
-            cd ~/docker
-            docker compose -f docker-compose.dev.yml build --no-cache TL.VerticalSlice.Template-dev
-            docker compose -f docker-compose.dev.yml up -d TL.VerticalSlice.Template-dev
+            docker compose -p tl.verticalslice.template-dev -f docker-compose.dev.yml build --no-cache
+            docker compose -p tl.verticalslice.template-dev -f docker-compose.dev.yml up -d

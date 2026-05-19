@@ -4,7 +4,7 @@ services:
     build: .
     container_name: TL.VerticalSlice.Template-dev
     ports:
-      - "5005:80"
+      - "5007:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - NODE_ENV=development

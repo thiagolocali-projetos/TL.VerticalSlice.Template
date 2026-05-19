@@ -1,0 +1,22 @@
+﻿version: "3.8"
+services:
+  app:
+    build: .
+    container_name: TL.VerticalSlice.Template-dev
+    ports:
+      - ""
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - NODE_ENV=development
+    networks:
+      - tlserver-dev
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+networks:
+  tlserver-dev:
+    driver: bridge

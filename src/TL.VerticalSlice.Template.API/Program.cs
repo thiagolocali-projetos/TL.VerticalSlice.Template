@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -105,7 +105,15 @@ try
     app.MapControllers();
     app.MapApplicationHealthChecks();
 
-    app.Run();
+    
+// Health endpoint para monitoramento de deployment
+app.MapGet("/", () => new
+{
+    status = "OK",
+    environment = app.Environment.EnvironmentName,
+    timestamp = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
+});
+app.Run();
 }
 catch (Exception ex)
 {
@@ -120,3 +128,4 @@ finally
 /// Explicit Program class to make it accessible to integration tests.
 /// </summary>
 public partial class Program { }
+

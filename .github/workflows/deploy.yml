@@ -1,0 +1,39 @@
+﻿name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Deploy
+        run: |
+          REPO="${{ github.event.repository.name }}"
+          BRANCH="${{ github.ref_name }}"
+          SLUG=$(echo "$REPO" | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9')
+          PROJECT_DIR="/home/tlocali/docker/projetos/$REPO"
+
+          if [ ! -d "$PROJECT_DIR" ]; then
+            echo "[x] Projeto nao encontrado: $PROJECT_DIR"
+            echo "    Clone o projeto primeiro com o script CloneProjeto"
+            exit 1
+          fi
+
+          cd "$PROJECT_DIR"
+          git fetch --all
+          git reset --hard origin/$BRANCH
+
+          if [ "$BRANCH" = "main" ]; then
+            echo "[>>] Deploy PROD ($REPO)..."
+            docker compose -p ${SLUG}-prod -f docker-compose.prod.yml up -d --build
+            echo "[OK] PROD atualizado: https://${SLUG}.thiagolocali.dev.br"
+          else
+            echo "[>>] Deploy DEV ($REPO)..."
+            docker compose -p ${SLUG}-dev -f docker-compose.dev.yml up -d --build
+            echo "[OK] DEV atualizado: http://dev.${SLUG}.tlservidor"
+          fi
+
